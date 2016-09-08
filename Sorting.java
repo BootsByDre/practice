@@ -1,3 +1,7 @@
+//*******************************************************************
+// NOTE: please read the 'More Info' tab to the right for shortcuts.
+//*******************************************************************
+
 import java.lang.Math; // headers MUST be above the first class
 
 public class Sorting {
@@ -11,7 +15,9 @@ public class Sorting {
       values[i] = Integer.parseInt(args[i]);
     }
     
-    int[] sorted = mergeSort(values, numValues);
+    // TODO Add support for different data sets
+    
+    int[] sorted = bubbleSort(values);
     
     System.out.println();
     System.out.print("Sorted: ");
@@ -23,32 +29,78 @@ public class Sorting {
     System.out.println();
     System.out.println("Size: " + numValues + ", Complexity: " + complexity);
   }
+  
+  static class ListNode<T extends Comparable<T>> {
+    T payload;
+    ListNode<T> next;
+  
+    public ListNode(T payload) {
+      this.payload = payload;
+      this.next = null;
+    }
+  
+    public ListNode<T> addToListOrdered(T value) {
+      complexity++;
+    
+      if (this.next == null) {
+        this.next = new ListNode<T>(value);
+        return this;
+      } else if (value.compareTo(this.payload) <= 0) {
+        ListNode<T> newNode = new ListNode<T>(value);
+        newNode.next = this;
+        return newNode;
+      } else {
+        this.next = this.next.addToListOrdered(value);
+        return this;
+      }
+    }
+  }
  
-  public static int[] bubbleSort(int[] values, int numValues) {
+  public static int[] bubbleSort(int[] values) {
+    int numValues = values.length;
     for (int i = 0; i < numValues; i++) {
-      for (int j = 0; j < (numValues - 1); j++) {
+      for (int j = 0; j < (numValues - 1 - i); j++) {
         complexity++;
         
-        System.out.println("Is " + values[j] + " greater than " + values[j + 1] + "?");
+        //System.out.println("Is " + values[j] + " greater than " + values[j + 1] + "?");
         if (values[j] > values[j + 1]) {
-          System.out.println("Yes, swapping...");
+          //System.out.println("Yes, swapping...");
           int first = values[j];
           values[j] = values[j + 1];
           values[j + 1] = first;
         } else {
-          System.out.println("Nope");
+          //System.out.println("Nope");
         }
       }
-      System.out.println("State after pass: ");
+      /*System.out.println("State after pass: ");
       for (int k = 0; k < numValues; k++) {
         System.out.print(values[k] + " ");
       }
-      System.out.println();
+      System.out.println();*/
     }
     return values;
   }
   
-  public static int[] mergeSort(int[] values, int numValues) {
+  public static int[] insertionSort(int[] values) {
+    ListNode<Integer> list = null;
+    
+    for (int i = 0; i < values.length; i++) {
+      if (list == null) {
+        list = new ListNode<Integer>(values[i]);
+      } else {
+        list = list.addToListOrdered(values[i]);
+      }
+    }
+    
+    int[] output = new int[values.length];
+    for (int i = 0; i < values.length; i++) {
+      output[i] = list.payload;
+      list = list.next;
+    }
+    return output;
+  }
+  
+  public static int[] mergeSort(int[] values) {
     return mergeSortHelper(values);
   }
   
